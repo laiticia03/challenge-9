@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function optimalChange(total, denominations) {
+  if (total < 0 || denominations.length === 0) {
+    return { total: 0, breakdown: {} };
+  }
+
+  if (total === 0) {
+    const breakdown = {};
+    for (let i = 0; i < denominations.length; i++) {
+      breakdown[denominations[i]] = 0;
+    }
+    return { total: 0, breakdown };
+  }
+
+  let minCoins = Infinity;
+  let breakdown = {};
+
+  for (let i = 0; i < denominations.length; i++) {
+    const denomination = denominations[i];
+    if (denomination > total) {
+      continue;
+    }
+
+    const { total: newTotal, breakdown: newBreakdown } = optimalChange(
+      total - denomination,
+      denominations
+    );
+
+    if (newTotal < minCoins) {
+      minCoins = newTotal;
+      breakdown = { ...newBreakdown, [denomination]: newBreakdown[denomination] + 1 };
+    }
+  }
+
+  return { total: minCoins + 1, breakdown };
+}
+
+console.log(optimalChange(47, [1, 5, 10, 20]))
+    </script>
+</body>
+</html>
